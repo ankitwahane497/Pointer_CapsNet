@@ -1,0 +1,6 @@
+*.npy
+Dataset/*.npy
+results
+result
+*.ckpt
+*.pyc
