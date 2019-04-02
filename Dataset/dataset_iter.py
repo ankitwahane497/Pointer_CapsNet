@@ -29,12 +29,23 @@ class dataset_iterator:
         batch_label = self.label[self.current_sample: self.current_sample + self.batch_size]
         batch_data = np.zeros((self.batch_size,self.n_points,3))
         for i in range(self.batch_size):
-            batch_data[i] = sample_points(self.preprocess_data(batch_pre_data[i][0]), self.n_points)
+            batch_data[i] = self.sample_points(self.preprocess_data(batch_pre_data[i][0]), self.n_points)
         # pdb.set_trace()
         batch_data = np.array(batch_data).reshape(self.batch_size, self.n_points,3)
         self.current_sample += self.batch_size
         return batch_data, batch_label, self.current_sample, self.iter_num
 
+    def sample_points(self,pcl, n_points):
+        if(len(pcl) == n_points):
+            return pcl
+        if(len(pcl) > n_points):
+            pcl_indx  = np.random.choice(len(pcl), n_points)
+            return pcl[pcl_indx]
+        if(len(pcl) < n_points):
+            pcl_new = np.zeros((n_points,3))
+            pcl_new[:len(pcl)] = pcl
+            pcl_new[len(pcl):] = pcl[-1]
+            return pcl_new
 
 
 if __name__ == '__main__':
